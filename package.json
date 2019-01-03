@@ -1,0 +1,36 @@
+{
+  "name": "@tapgiants/graphql",
+  "version": "1.0.0",
+  "description": "GraphQL Apollo helpers",
+  "main": "build/index.js",
+  "repository": "https://github.com/tapgiants/graphql.git",
+  "author": "Tap Giants",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --watch --mode development",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "apollo-boost": "^0.1.23",
+    "babel-loader": "^8.0.4",
+    "react": "^16.7.0",
+    "react-apollo": "^2.3.3",
+    "react-dom": "^16.7.0",
+    "recompose": "^0.30.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.28.2",
+    "webpack-cli": "^3.1.2"
+  },
+  "peerDependencies": {
+    "apollo-boost": "^0.1.23",
+    "react": "^16.7.0",
+    "react-apollo": "^2.3.3",
+    "react-dom": "^16.7.0",
+    "recompose": "^0.30.0"
+  }
+}
