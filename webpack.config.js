@@ -1,4 +1,5 @@
-var path = require('path');
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -31,9 +32,13 @@ module.exports = {
       'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
       'react-apollo': path.resolve(__dirname, './node_modules/react-apollo'),
       'apollo-boost': path.resolve(__dirname, './node_modules/apollo-boost'),
+      'graphql': path.resolve(__dirname, './node_modules/graphql'),
       'recompose': path.resolve(__dirname, './node_modules/recompose')
     }
   },
+  plugins: [
+    new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, 'node-noop')
+  ],
   externals: {
     react: {
       commonjs: 'react',
@@ -61,6 +66,32 @@ module.exports = {
       commonjs: 'apollo-boost',
       commonjs2: 'apollo-boost',
       amd: 'apollo-boost'
-    }
+    },
+    'graphql': {
+      commonjs: 'graphql',
+      commonjs2: 'graphql',
+      amd: 'graphql'
+    },
+    'apollo-link-http': {
+      commonjs: 'apollo-link-http',
+      commonjs2: 'apollo-link-http',
+      amd: 'apollo-link-http'
+    },
+    'apollo-client': {
+      commonjs: 'apollo-client',
+      commonjs2: 'apollo-client',
+      amd: 'apollo-client'
+    },
+    'apollo-cache-inmemory': {
+      commonjs: 'apollo-cache-inmemory',
+      commonjs2: 'apollo-cache-inmemory',
+      amd: 'apollo-cache-inmemory'
+    },
+    'node-fetch': {
+      commonjs: 'node-fetch',
+      commonjs2: 'node-fetch',
+      amd: 'node-fetch',
+      root: 'fetch'
+    },
   }
 };
