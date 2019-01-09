@@ -76,7 +76,22 @@ export default () => (
 
 The uri prop is a string endpoint to a GraphQL server
 
-### How to format errors returned from the GraphQL server
+### formatGQLErrors(errors: Array):Object function
+>Errors array should follow the GraphQL convetions described in the *GraphQL conventions* section
+
+Accepts an array which represnets the GraphQL errors with the following format.
+```js
+[{ key: "name", message: "can't be blank"}]
+```
+
+Returns key value object where the key is the name of the field and
+the value is the error.
+
+```js
+{ name: "can't be blank" }
+```
+
+### formatGQLErrors example
 
 ```js
 import React from 'react';
@@ -132,21 +147,6 @@ export default () => (
     </Mutation>
   </ApolloWrapper>
 );
-```
-
-### formatGQLErrors(errors: Array):Object function
->Errors array should follow the GraphQL convetions described in the *GraphQL conventions* section
-
-Accepts an array which represnets the GraphQL errors with the following format.
-```js
-[{ key: "name", message: "can't be blank"}]
-```
-
-Returns key value object where the key is the name of the field and
-the value is the error.
-
-```js
-{ name: "can't be blank" }
 ```
 
 ## List API
@@ -419,6 +419,71 @@ Loads items at the end of the list. Uses cursor-based pagination.
 **moreVars**: Object - Additional query variables
 
 **first**: Integer - Number of items that will be returned from the GraphQL server
+
+### loadMore example
+```jsx
+import React from 'react';
+import { ApolloWrapper, loadMore } from '@tapgiants/graphql';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const INDUSTRIES = gql`
+  query($input: ListInput) {
+    industries(input: $input) @connection(key: "industries") {
+      list {
+        id
+        name
+      }
+      totalCount
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }
+`;
+
+export default () => (
+  <ApolloWrapper uri="http://localhost:4001/api">
+    <Query query={INDUSTRIES} variables={{ input: { first: 10, after: '', before: '' } }}>
+      {({ loading, fetchMore, data: { industries } }) => {
+        if (loading) return 'Loading...';
+
+        return (
+          <React.Fragment>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {industries.list.map((industry, index) => (
+                  <tr key={index}>
+                    <td>{industry.id}</td>
+                    <td>{industry.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {industries.pageInfo.hasNextPage && (
+              <a href="#" onClick={(e) => {
+                e.preventDefault();
+                loadMore(fetchMore, industries.pageInfo, 'industries', {}, 10)
+              }}>Load more</a>
+            )}
+          </React.Fragment>
+        )
+      }}
+    </Query>
+  </ApolloWrapper>
+);
+```
 
 ### Common arguments examples:
 
