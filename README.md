@@ -71,6 +71,83 @@ export default () => (
 
 The uri prop is a string endpoint to a GraphQL server
 
+### How to format errors returned from the GraphQL server
+
+```js
+import React from 'react';
+import { ApolloWrapper, formatGQLErrors } from '@tapgiants/graphql';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const CREATE_INDUSTRY = gql`
+  mutation($input: IndustryInput!) {
+    createIndustry(input: $input) {
+      industry {
+        id
+        name
+      }
+
+      errors {
+        key
+        message
+      }
+    }
+  }
+`;
+
+export default () => (
+  <ApolloWrapper uri="http://localhost:4001/api">
+    <Mutation mutation={CREATE_INDUSTRY}>
+      {(createIndustryMutation) => {
+
+        return (
+          <a
+            href="#"
+            onClick={() => {
+              createIndustryMutation({
+                variables: {
+                  input: {
+                    name: ''
+                  }
+                }
+              }).then(({ data: { createIndustry: { industry, errors } } }) => {
+                console.log('Errors object returned from the server', errors);
+                // Errors object returned from the server
+                // [{ key: "name", message: "can't be blank"}]
+
+
+                const formattedErrors = formatGQLErrors(errors);
+                console.log('Formatted errors', formattedErrors);
+                // Formatted errors
+                // { name: "can't be blank" }
+              });
+            }}
+          >Create industry
+          </a>);
+      }}
+    </Mutation>
+  </ApolloWrapper>
+);
+```
+
+### formatGQLErrors(Array):Object function
+>Errors array should follow the GraphQL convetions described in the *GraphQL conventions* section
+
+Accepts array which represnets the GraphQL errors with the following format.
+```js
+[{ key: "name", message: "can't be blank"}]
+```
+
+Returns key value object where the key is the name of the field and
+the value is the error.
+
+```js
+{ name: "can't be blank" }
+```
+
+## GraphQL conventions
+
+Add link to an external repo that describes all the conventions.
 
 ## Development
 
