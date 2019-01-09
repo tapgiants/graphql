@@ -69,6 +69,8 @@ export default () => (
 
 #### `uri: String`
 
+The uri prop is a string endpoint to a GraphQL server
+
 
 ## Development
 
