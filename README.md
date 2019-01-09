@@ -169,6 +169,112 @@ Adds new item at the beginning of the list.
 
 **path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section
 
+### updateList example
+```jsx
+import React from 'react';
+import { ApolloWrapper, updateList } from '@tapgiants/graphql';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const INDUSTRIES = gql`
+  query {
+    industries @connection(key: "industries") {
+      list {
+        id
+        name
+      }
+      totalCount
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }
+`;
+
+const CREATE_INDUSTRY = gql`
+  mutation($input: IndustryInput!) {
+    createIndustry(input: $input) {
+      industry {
+        id
+        name
+      }
+
+      errors {
+        key
+        message
+      }
+    }
+  }
+`;
+
+const AddIndustry = ({ industryName }) => (
+  <Mutation
+    mutation={CREATE_INDUSTRY}
+    update={(cache, { data: { createIndustry: { industry } } }) => {
+      updateList(
+        cache,
+        industry,
+        INDUSTRIES,
+        'industries'
+      )
+    }}>
+    {(createIndustryMutation) => (
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+
+          createIndustryMutation({
+            variables: {
+              input: {
+                name: industryName
+              }
+            }
+          })
+        }}
+      >Create industry
+      </a>)}
+  </Mutation>
+);
+
+export default () => (
+  <ApolloWrapper uri="http://localhost:4001/api">
+    <Query query={INDUSTRIES}>
+      {({ loading, data: { industries } }) => {
+        if (loading) return 'Loading...';
+
+        return (
+          <React.Fragment>
+            <AddIndustry industryName="Cinema" />
+
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {industries.list.map((industry, index) => (
+                  <tr key={index}>
+                    <td>{industry.id}</td>
+                    <td>{industry.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </React.Fragment>
+        )
+      }}
+    </Query>
+  </ApolloWrapper>
+);
+```
+
 ### deleteFromList(cache: DataProxy, query: Object, path: String, deleteCondition: Function):void
 
 Deletes an item from the list.
@@ -185,7 +291,117 @@ Deletes an item from the list.
 
 Example:
 ```js
-(industry) => industry.id == id)
+(industry) => industry.id == id
+```
+
+### deleteFromList example
+
+```jsx
+import React from 'react';
+import { ApolloWrapper, deleteFromList, formatGQLErrors } from '@tapgiants/graphql';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const INDUSTRIES = gql`
+  query {
+    industries @connection(key: "industries") {
+      list {
+        id
+        name
+      }
+      totalCount
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+    }
+  }
+`;
+
+const DELETE_INDUSTRY = gql`
+  mutation($input: IdInput!) {
+    deleteIndustry(input: $input) {
+      industry {
+        id
+        name
+      }
+      errors {
+        key
+        message
+      }
+    }
+  }
+`;
+
+const AddIndustry = ({ industryId }) => (
+  <Mutation
+    mutation={DELETE_INDUSTRY}
+    update={(cache, { data: { deleteIndustry: { industry, errors } } }) => {
+      if (errors) {
+        console.log(formatGQLErrors(errors));
+      } else {
+        deleteFromList(
+          cache,
+          INDUSTRIES,
+          'industries',
+          (item) => item.id == industry.id
+        );
+      }
+    }}>
+    {(deleteIndustryMutation) => (
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+
+          deleteIndustryMutation({
+            variables: {
+              input: {
+                id: industryId
+              }
+            }
+          })
+        }}
+      >Delete industry
+      </a>)}
+  </Mutation>
+);
+
+export default () => (
+  <ApolloWrapper uri="http://localhost:4001/api">
+    <Query query={INDUSTRIES}>
+      {({ loading, data: { industries } }) => {
+        if (loading) return 'Loading...';
+
+        return (
+          <React.Fragment>
+            <AddIndustry industryId={67} />
+
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {industries.list.map((industry, index) => (
+                  <tr key={index}>
+                    <td>{industry.id}</td>
+                    <td>{industry.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </React.Fragment>
+        )
+      }}
+    </Query>
+  </ApolloWrapper>
+);
 ```
 
 ### loadMore(fetchMore: Function, pageInfo: Object, path: String, moreVars: Object, first: Integer):void
