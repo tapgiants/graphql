@@ -1,0 +1,22 @@
+{
+  "name": "graphql-npm-example",
+  "version": "1.0.0",
+  "description": "How to use @tapgiants/graphql npm package",
+  "author": "Tap Giants",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@tapgiants/graphql": "^1.0.1",
+    "apollo-boost": "^0.1.23",
+    "graphql": "^14.0.2",
+    "next": "^7.0.2",
+    "react": "^16.7.0",
+    "react-apollo": "^2.3.3",
+    "react-dom": "^16.7.0",
+    "recompose": "^0.30.0"
+  }
+}

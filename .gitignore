@@ -1,3 +1,5 @@
 .DS_Store
 node_modules
+examples/graphql/node_modules
+examples/graphql/.next
 yarn-error.log
