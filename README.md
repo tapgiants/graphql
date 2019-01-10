@@ -77,7 +77,7 @@ export default () => (
 ## Errors API
 
 ### formatGQLErrors(errors: Array):Object
->An errors array returned from the server should follow the GraphQL convetions described in the *GraphQL conventions* section
+>An errors array returned from the server should follow the GraphQL convetions described in the [*GraphQL conventions*](#graphql-conventions) section
 
 Transforms an errors array to a key value object.
 
@@ -158,7 +158,7 @@ export default () => (
 All of the following functions require the usage of the *@connection* directive described
 in the Apollo [docs](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive).
 
->In order to manage a list(update, delete, paginate) check out the GraphQL list conventions described in the *GraphQL conventions* section
+>In order to manage a list(update, delete, paginate) check out the GraphQL list conventions described in the [*GraphQL conventions*](#graphql-conventions) section
 
 ### updateList(cache: DataProxy, newItem: Object, query: Object, path: String):void
 
@@ -170,9 +170,9 @@ Adds a new item at the beginning of the list.
 
 **newItem**: Object - The item that will be added.
 
-**query**: Object - A GrahqQL query created with the [`graphql-tag`](https://github.com/apollographql/graphql-tag) package used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the [`@connection`](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive) directive. For more info check out `Common arguments examples` section.
+**query**: Object - A GrahqQL query created with the [`graphql-tag`](https://github.com/apollographql/graphql-tag) package used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the [`@connection`](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive) directive. For more info check out the [`Common arguments examples`](#query-argument) section.
 
-**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section.
+**path**: String - The key under which the list result is nested. For more info check out the [`Common arguments examples`](#path-argument) section.
 
 ### updateList example
 ```jsx
@@ -288,9 +288,9 @@ Deletes an item from the list.
 
 **cache**: DataProxy - The cache argument is provided by Apollo. Apollo [reference](https://www.apollographql.com/docs/react/essentials/mutations.html#update).
 
-**query**: Object - A GrahqQL query created with the [`graphql-tag`](https://github.com/apollographql/graphql-tag) package used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the [`@connection`](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive) directive. For more info check out `Common arguments examples` section.
+**query**: Object - A GrahqQL query created with the [`graphql-tag`](https://github.com/apollographql/graphql-tag) package used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the [`@connection`](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive) directive. For more info check out the [`Common arguments examples`](#query-argument) section.
 
-**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section.
+**path**: String - The key under which the list result is nested. For more info check out the [`Common arguments examples`](#path-argument) section.
 
 **deleteCondition**: Function: Boolean - A callback function used to find the element that we want to remove from the cache. Receives item as an argument from the cached list in order to test the callback result. If the callback return true the item will be deleted.
 
@@ -417,9 +417,9 @@ Loads items at the end of the list. Uses cursor-based pagination.
 
 **fetchMore**: Function - Provided by [Apollo](https://www.apollographql.com/docs/react/advanced/caching.html#fetchMore).
 
-**pageInfo**: Object - The shape of the pageInfo is described in the `GraphQL conventions` section.
+**pageInfo**: Object - The shape of the pageInfo is described in the [`GraphQL conventions`](#graphql-conventions) section.
 
-**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section.
+**path**: String - The key under which the list result is nested. For more info check out the[`Common arguments examples`](#path-argument) section.
 
 **moreVars**: Object - Additional query variables.
 
