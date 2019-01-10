@@ -16,9 +16,15 @@ Install @tapgiants/graphql
 yarn add @tapgiants/graphql
 ```
 
-## Usage
+## ApolloWrapper API
 
-### How to perform simple query with the ApolloWrapper component
+### Props
+
+#### `uri: String`
+
+The uri prop is a string endpoint to a GraphQL server.
+
+### ApolloWrapper example
 
 ```jsx
 import React from 'react';
@@ -68,24 +74,23 @@ export default () => (
 );
 ```
 
-## ApolloWrapper API
+## Errors API
 
-### Props
+### formatGQLErrors(errors: Array):Object
+>An errors array returned from the server should follow the GraphQL convetions described in the *GraphQL conventions* section
 
-#### `uri: String`
+Transforms an errors array to a key value object.
 
-The uri prop is a string endpoint to a GraphQL server
+#### Arguments
 
-### formatGQLErrors(errors: Array):Object function
->Errors array should follow the GraphQL convetions described in the *GraphQL conventions* section
+**errors**: Array - Array with errors.
 
-Accepts an array which represnets the GraphQL errors with the following format.
 ```js
 [{ key: "name", message: "can't be blank"}]
 ```
 
-Returns key value object where the key is the name of the field and
-the value is the error.
+**Returns** key value object where the key is the name of the field and
+the value is the error message.
 
 ```js
 { name: "can't be blank" }
@@ -150,24 +155,24 @@ export default () => (
 ```
 
 ## List API
-All the following functions require the usige of the *@connection* directive described
+All of the following functions require the usage of the *@connection* directive described
 in the Apollo [docs](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive).
 
->In order to update/delete/paginate a list check out GraphQL list conventions described in the *GraphQL conventions* section
+>In order to manage a list(update, delete, paginate) check out the GraphQL list conventions described in the *GraphQL conventions* section
 
 ### updateList(cache: DataProxy, newItem: Object, query: Object, path: String):void
 
-Adds new item at the beginning of the list.
+Adds a new item at the beginning of the list.
 
 #### Arguments
 
-**cache**: DataProxy - Cache attribute is provided by Apollo. More info can be found [here](https://www.apollographql.com/docs/react/essentials/mutations.html#update).
+**cache**: DataProxy - The cache argument is provided by Apollo. Apollo [reference](https://www.apollographql.com/docs/react/essentials/mutations.html#update).
 
 **newItem**: Object - The item that will be added.
 
-**query**: Object - GrahqQL query created with `graphql-tag` used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the `@connection` directive. For more info check out `Common arguments examples` section
+**query**: Object - A GrahqQL query created with the [`graphql-tag`](https://github.com/apollographql/graphql-tag) package used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the [`@connection`](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive) directive. For more info check out `Common arguments examples` section.
 
-**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section
+**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section.
 
 ### updateList example
 ```jsx
@@ -281,11 +286,11 @@ Deletes an item from the list.
 
 #### Arguments
 
-**cache**: DataProxy - Cache attribute is provided by Apollo. More info can be found [here](https://www.apollographql.com/docs/react/essentials/mutations.html#update).
+**cache**: DataProxy - The cache argument is provided by Apollo. Apollo [reference](https://www.apollographql.com/docs/react/essentials/mutations.html#update).
 
-**query**: Object - GrahqQL query created with `graphql-tag` used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the `@connection` directive. For more info check out `Common arguments examples` section
+**query**: Object - A GrahqQL query created with the [`graphql-tag`](https://github.com/apollographql/graphql-tag) package used previously to fetch the list. The query is used to find the result set in the cache. In order to use just the query without the query variables use the [`@connection`](https://www.apollographql.com/docs/react/features/pagination.html#connection-directive) directive. For more info check out `Common arguments examples` section.
 
-**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section
+**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section.
 
 **deleteCondition**: Function: Boolean - A callback function used to find the element that we want to remove from the cache. Receives item as an argument from the cached list in order to test the callback result. If the callback return true the item will be deleted.
 
@@ -410,15 +415,15 @@ Loads items at the end of the list. Uses cursor-based pagination.
 
 #### Arguments
 
-**fetchMore**: Function - Provided by [Apollo](https://www.apollographql.com/docs/react/advanced/caching.html#fetchMore)
+**fetchMore**: Function - Provided by [Apollo](https://www.apollographql.com/docs/react/advanced/caching.html#fetchMore).
 
-**pageInfo**: Object - The shape of the pageInfo is described in the `GraphQL conventions` section
+**pageInfo**: Object - The shape of the pageInfo is described in the `GraphQL conventions` section.
 
-**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section
+**path**: String - The key under which the list result is nested. For more info check out `Common arguments examples` section.
 
-**moreVars**: Object - Additional query variables
+**moreVars**: Object - Additional query variables.
 
-**first**: Integer - Number of items that will be returned from the GraphQL server
+**first**: Integer, Default: 10 - The number of items that will be returned from the GraphQL server.
 
 ### loadMore example
 ```jsx
@@ -507,7 +512,9 @@ const INDUSTRIES = gql`
 
 Example:
 
-Apollo will nest the result of the query bellow under `industries` key.
+Apollo will use the query name as a namespace of the result.
+The query in the example bellow is named `industries` so the namespace in the result will be `industries` too.
+
 ```js
 const INDUSTRIES = gql`
   query {
