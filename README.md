@@ -210,7 +210,7 @@ const CREATE_INDUSTRY = gql`
   }
 `;
 
-const AddIndustry = ({ industryName }) => (
+const AddIndustryButton = ({ industryName }) => (
   <Mutation
     mutation={CREATE_INDUSTRY}
     update={(cache, { data: { createIndustry: { industry } } }) => {
@@ -248,7 +248,7 @@ export default () => (
 
         return (
           <React.Fragment>
-            <AddIndustry industryName="Cinema" />
+            <AddIndustryButton industryName="Cinema" />
 
             <table>
               <thead>
