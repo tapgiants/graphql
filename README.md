@@ -335,7 +335,7 @@ const DELETE_INDUSTRY = gql`
   }
 `;
 
-const AddIndustry = ({ industryId }) => (
+const DeleteIndustryButton = ({ industryId }) => (
   <Mutation
     mutation={DELETE_INDUSTRY}
     update={(cache, { data: { deleteIndustry: { industry, errors } } }) => {
@@ -377,7 +377,7 @@ export default () => (
 
         return (
           <React.Fragment>
-            <AddIndustry industryId={67} />
+            {Array.isArray(industries.list) && <DeleteIndustryButton industryId={industries.list[0].id} />}
 
             <table>
               <thead>
