@@ -3,11 +3,9 @@ import { ApolloProvider } from 'react-apollo';
 import ApolloClient from './ApolloClient';
 
 const ApolloWrapper = ({ children, uri }) => (
-  <div>
-    <ApolloProvider client={ApolloClient(uri)}>
-      {children}
-    </ApolloProvider>
-  </div>
+  <ApolloProvider client={ApolloClient(uri)}>
+    {children}
+  </ApolloProvider>
 );
 
 export default ApolloWrapper;
