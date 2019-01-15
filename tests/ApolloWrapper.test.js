@@ -6,7 +6,7 @@ import { ApolloWrapper } from '../src';
 
 test('creates ApolloWrapper with uri', () => {
   const component = renderer.create(
-    <ApolloWrapper uri="http://localhost:3000/api">
+    <ApolloWrapper uri="http://localhost:4001/api">
       <ApolloConsumer>
         {_client => <React.Fragment />}
       </ApolloConsumer>

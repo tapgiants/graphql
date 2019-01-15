@@ -27,6 +27,7 @@
     "react-dom": "^16.7.0",
     "react-test-renderer": "^16.7.0",
     "recompose": "^0.30.0",
+    "waait": "^1.0.2",
     "webpack": "^4.28.2",
     "webpack-cli": "^3.1.2"
   },

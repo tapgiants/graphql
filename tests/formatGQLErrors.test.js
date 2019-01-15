@@ -6,7 +6,6 @@ test('transforms errors array to key/value object', () => {
   ])).toEqual({ "name": "can't be blank" });
 });
 
-
 test('transforms empty errors array to an object', () => {
   expect(formatGQLErrors([])).toEqual({});
 });
