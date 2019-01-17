@@ -1,33 +1,19 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-const INDUSTRIES = gql`
-  query {
-    industries {
-      list {
-        id
-        name
-      }
-      totalCount
-      pageInfo {
-        startCursor
-        endCursor
-        hasNextPage
-        hasPreviousPage
-      }
-    }
-  }
-`;
-
-const LoadMore = ({ loadMore }) => (
-  <Query query={INDUSTRIES}>
+const List = ({ query, TestComponent }) => (
+  <Query query={query}>
     {({ loading, error, fetchMore, data: { industries } }) => {
       if (loading) return 'Loading...';
       if (error) return `Error! ${error}`;
 
       return (
         <React.Fragment>
+          <TestComponent
+            data={industries}
+            fetchMore={fetchMore}
+          />
+
           <table>
             <thead>
               <tr>
@@ -45,19 +31,10 @@ const LoadMore = ({ loadMore }) => (
               ))}
             </tbody>
           </table>
-
-          {industries.pageInfo.hasNextPage && (
-            <button onClick={() => {
-              loadMore(fetchMore, industries.pageInfo, 'industries', {}, 3)
-            }}>Load more</button>
-          )}
         </React.Fragment>
       )
     }}
   </Query>
 );
 
-export {
-  INDUSTRIES,
-  LoadMore
-};
+export default List;

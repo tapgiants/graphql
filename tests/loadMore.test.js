@@ -3,7 +3,9 @@ import { MockedProvider } from 'react-apollo/test-utils';
 import renderer from 'react-test-renderer';
 import wait from 'waait';
 
-import { INDUSTRIES, LoadMore } from './LoadMore';
+import List from './support/components/List';
+import { INDUSTRIES } from './support/gqlQueries';
+import { listMock, listLoadMore } from './support/mocks/list';
 import { loadMore } from '../src';
 
 const mockedList = [
@@ -19,51 +21,43 @@ const loadedItems = [
 ];
 
 const mocks = [
-  {
-    request: {
-      query: INDUSTRIES
-    },
-    result: {
-      data: {
-        industries: {
-          list: mockedList,
-          pageInfo: {
-            endCursor: "4",
-            hasNextPage: true,
-            hasPreviousPage: false,
-            startCursor: "6"
-          },
-          totalCount: 6
-        }
-      }
-    }
-  },
-  {
-    request: {
-      query: INDUSTRIES,
-      variables: { input: { first: 3, after: "4" } }
-    },
-    result: {
-      data: {
-        industries: {
-          list: loadedItems,
-          pageInfo: {
-            endCursor: "1",
-            hasNextPage: false,
-            hasPreviousPage: true,
-            startCursor: "3"
-          },
-          totalCount: 6
-        }
-      }
-    }
-  }
+  listMock({
+    query: INDUSTRIES,
+    dataList: mockedList,
+    path: 'industries',
+    hasNextPage: true
+  }),
+  listLoadMore({
+    query: INDUSTRIES,
+    dataList: loadedItems,
+    path: 'industries',
+    variables: { first: 3, after: "4" }
+  })
 ];
+
+const LoadMoreBtn = ({ industries, loadMore, fetchMore }) => (
+  <React.Fragment>
+    {industries.pageInfo.hasNextPage && (
+      <button onClick={() => {
+        loadMore(fetchMore, industries.pageInfo, 'industries', {}, 3)
+      }}>Load more</button>
+    )}
+  </React.Fragment>
+);
 
 test('loads items in a list', async () => {
   const component = renderer.create(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <LoadMore loadMore={loadMore} />
+      <List
+        query={INDUSTRIES}
+        TestComponent={({ data, fetchMore }) =>
+          <LoadMoreBtn
+            industries={data}
+            fetchMore={fetchMore}
+            loadMore={loadMore}
+          />
+        }
+      />
     </MockedProvider>
   );
 

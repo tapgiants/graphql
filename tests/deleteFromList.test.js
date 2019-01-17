@@ -2,8 +2,14 @@ import React from 'react';
 import { MockedProvider } from 'react-apollo/test-utils';
 import renderer from 'react-test-renderer';
 import wait from 'waait';
+import { Mutation } from 'react-apollo';
 
-import { INDUSTRIES, DELETE_INDUSTRY, DeleteList } from './Deletelist';
+import List from './support/components/List';
+import { INDUSTRIES } from './support/gqlQueries';
+import { DELETE_INDUSTRY } from './support/gqlMutations';
+import { listMock } from './support/mocks/list';
+import { deleteMock } from './support/mocks/delete';
+
 import { deleteFromList } from '../src';
 
 const mockedList = [
@@ -15,45 +21,62 @@ const mockedList = [
 const deletedItem = mockedList[0];
 
 const mocks = [
-  {
-    request: {
-      query: INDUSTRIES
-    },
-    result: {
-      data: {
-        industries: {
-          list: mockedList,
-          pageInfo: {
-            endCursor: "1",
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: "3"
-          },
-          totalCount: 3
-        }
-      }
-    }
-  },
-  {
-    request: {
-      query: DELETE_INDUSTRY,
-      variables: { input: { id: deletedItem.id } }
-    },
-    result: {
-      data: {
-        deleteIndustry: {
-          industry: deletedItem,
-          errors: null
-        }
-      }
-    }
-  }
+  listMock({
+    query: INDUSTRIES,
+    dataList: mockedList,
+    path: 'industries'
+  }),
+  deleteMock({
+    query: DELETE_INDUSTRY,
+    variables: { id: deletedItem.id },
+    item: deletedItem,
+    path: 'deleteIndustry'
+  })
 ];
+
+const DeleteItemButton = ({ deleteFromList, industryId }) => (
+  <Mutation
+    mutation={DELETE_INDUSTRY}
+    update={(cache, { data: { deleteIndustry: { industry, errors } } }) => {
+      if (errors) {
+        console.log(formatGQLErrors(errors));
+      } else {
+        deleteFromList(
+          cache,
+          INDUSTRIES,
+          'industries',
+          (item) => item.id == industry.id
+        );
+      }
+    }}>
+    {(deleteIndustryMutation) => (
+      <button
+        onClick={() => {
+          deleteIndustryMutation({
+            variables: {
+              input: {
+                id: industryId
+              }
+            }
+          })
+        }}
+      >Delete industry
+      </button>)}
+  </Mutation>
+);
 
 test('deletes item from a list', async () => {
   const component = renderer.create(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <DeleteList industryId={deletedItem.id} deleteFromList={deleteFromList} />
+      <List
+        query={INDUSTRIES}
+        TestComponent={() =>
+          <DeleteItemButton
+            deleteFromList={deleteFromList}
+            industryId={deletedItem.id}
+          />
+        }
+      />
     </MockedProvider>
   );
 

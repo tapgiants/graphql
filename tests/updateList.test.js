@@ -2,8 +2,14 @@ import React from 'react';
 import { MockedProvider } from 'react-apollo/test-utils';
 import renderer from 'react-test-renderer';
 import wait from 'waait';
+import { Mutation } from 'react-apollo';
 
-import { INDUSTRIES, CREATE_INDUSTRY, UpdateList } from './UpdateList';
+import List from './support/components/List';
+import { INDUSTRIES } from './support/gqlQueries';
+import { CREATE_INDUSTRY } from './support/gqlMutations';
+import { listMock } from './support/mocks/list';
+import { createMock } from './support/mocks/create';
+
 import { updateList } from '../src';
 
 const mockedList = [
@@ -17,45 +23,55 @@ const newItem = { id: "4", name: "Cinema" };
 const updatedMockedList = [...[newItem], ...mockedList];
 
 const mocks = [
-  {
-    request: {
-      query: INDUSTRIES
-    },
-    result: {
-      data: {
-        industries: {
-          list: mockedList,
-          pageInfo: {
-            endCursor: "1",
-            hasNextPage: false,
-            hasPreviousPage: false,
-            startCursor: "3"
-          },
-          totalCount: 3
-        }
-      }
-    }
-  },
-  {
-    request: {
-      query: CREATE_INDUSTRY,
-      variables: { input: { name: "Cinema" } }
-    },
-    result: {
-      data: {
-        createIndustry: {
-          industry: newItem,
-          errors: null
-        }
-      }
-    }
-  }
+  listMock({
+    query: INDUSTRIES,
+    dataList: mockedList,
+    path: 'industries'
+  }),
+  createMock({
+    query: CREATE_INDUSTRY,
+    variables: { name: newItem.name },
+    item: newItem,
+    path: 'createIndustry'
+  })
 ];
+
+const AddIndustryButton = ({ updateList, industryName }) => (
+  <Mutation
+    mutation={CREATE_INDUSTRY}
+    update={(cache, { data: { createIndustry: { industry } } }) => {
+      updateList(
+        cache,
+        industry,
+        INDUSTRIES,
+        'industries'
+      );
+    }}>
+    {(createIndustryMutation) => (
+      <button
+        onClick={() => {
+          createIndustryMutation({
+            variables: {
+              input: {
+                name: industryName
+              }
+            }
+          })
+        }}
+      >Create industry
+      </button>)}
+  </Mutation>
+);
 
 test('adds item to a list', async () => {
   const component = renderer.create(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <UpdateList updateList={updateList} />
+      <List
+        query={INDUSTRIES}
+        TestComponent={() =>
+          <AddIndustryButton updateList={updateList} industryName={newItem.name} />
+        }
+      />
     </MockedProvider>
   );
 
