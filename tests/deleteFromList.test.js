@@ -3,8 +3,8 @@ import { MockedProvider } from 'react-apollo/test-utils';
 import renderer from 'react-test-renderer';
 import wait from 'waait';
 
-import { INDUSTRIES, CREATE_INDUSTRY, UpdateList } from './UpdateList';
-import { updateList } from '../src';
+import { INDUSTRIES, DELETE_INDUSTRY, DeleteList } from './Deletelist';
+import { deleteFromList } from '../src';
 
 const mockedList = [
   { id: "3", name: "Arts & Crafts" },
@@ -12,9 +12,7 @@ const mockedList = [
   { id: "1", name: "IT" }
 ];
 
-const newItem = { id: "4", name: "Cinema" };
-
-const updatedMockedList = [...[newItem], ...mockedList];
+const deletedItem = mockedList[0];
 
 const mocks = [
   {
@@ -38,13 +36,13 @@ const mocks = [
   },
   {
     request: {
-      query: CREATE_INDUSTRY,
-      variables: { input: { name: "Cinema" } }
+      query: DELETE_INDUSTRY,
+      variables: { input: { id: deletedItem.id } }
     },
     result: {
       data: {
-        createIndustry: {
-          industry: newItem,
+        deleteIndustry: {
+          industry: deletedItem,
           errors: null
         }
       }
@@ -52,10 +50,10 @@ const mocks = [
   }
 ];
 
-test('adds item to a list', async () => {
+test('deletes item from a list', async () => {
   const component = renderer.create(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <UpdateList updateList={updateList} />
+      <DeleteList industryId={deletedItem.id} deleteFromList={deleteFromList} />
     </MockedProvider>
   );
 
@@ -73,10 +71,13 @@ test('adds item to a list', async () => {
   button.props.onClick();
   await wait(0);
 
-  component.root.findByType('tbody').findAllByType('tr').forEach((tr, index) => {
-    const [id, name] = tr.children;
+  const updatedList =
+    component.root.findByType('tbody').findAllByType('tr').map((tr, index) => {
+      const [id, name] = tr.children;
+      return { id: id.children[0], name: name.children[0] };
+    });
 
-    expect(updatedMockedList[index].id).toBe(id.children[0]);
-    expect(updatedMockedList[index].name).toBe(name.children[0]);
-  });
+  expect(updatedList).toEqual(
+    expect.not.arrayContaining([deletedItem])
+  );
 });

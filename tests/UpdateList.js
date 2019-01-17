@@ -63,7 +63,7 @@ const AddIndustryButton = ({ updateList, industryName }) => (
   </Mutation>
 );
 
-const List = ({ updateList }) => (
+const UpdateList = ({ updateList }) => (
   <Query query={INDUSTRIES}>
     {({ loading, error, data: { industries } }) => {
       if (loading) return 'Loading...';
@@ -99,5 +99,5 @@ const List = ({ updateList }) => (
 export {
   INDUSTRIES,
   CREATE_INDUSTRY,
-  List
+  UpdateList
 };
