@@ -1,6 +1,6 @@
 {
   "name": "@tapgiants/graphql",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "GraphQL Apollo helpers",
   "main": "build/index.js",
   "repository": "https://github.com/tapgiants/graphql.git",
