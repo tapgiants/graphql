@@ -4,9 +4,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'node-fetch';
 
 export default (uri, headers = {}) => {
-  // TODO: throw exception if uri is not set. Add test
+  if (!uri) throw new Error('Uri prop not passed to the ApolloWrapper component');
 
-  let httpLinkOptions = { uri: uri, fetch }
+  let httpLinkOptions = { uri: uri, fetch };
 
   if (Object.keys(headers).length > 0) {
     httpLinkOptions.headers = headers;
@@ -15,5 +15,6 @@ export default (uri, headers = {}) => {
   const httpLink = createHttpLink(httpLinkOptions);
 
   let apolloParams = { cache: new InMemoryCache(), link: httpLink };
+
   return new ApolloClient(apolloParams);
 };
