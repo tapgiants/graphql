@@ -24,6 +24,10 @@ yarn add @tapgiants/graphql
 
 The uri prop is a string endpoint to a GraphQL server.
 
+#### `headers: Object`
+
+The headers props is added to the request headers.
+
 ### ApolloWrapper example
 
 ```jsx
@@ -44,7 +48,9 @@ const INDUSTRIES = gql`
 `;
 
 export default () => (
-  <ApolloWrapper uri="http://localhost:4001/api">
+  <ApolloWrapper
+    uri="http://localhost:4001/api"
+    headers={{ Authorization: `Bearer token` }}>
     <Query query={INDUSTRIES}>
       {({ loading, data: { industries } }) => {
         if (loading) return 'Loading...';
