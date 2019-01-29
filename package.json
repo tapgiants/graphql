@@ -1,6 +1,6 @@
 {
   "name": "@tapgiants/graphql",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "GraphQL Apollo helpers",
   "main": "build/index.js",
   "repository": "https://github.com/tapgiants/graphql.git",
@@ -16,6 +16,7 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
+    "apollo-absinthe-upload-link": "^1.5.0",
     "apollo-boost": "^0.1.23",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
@@ -32,6 +33,7 @@
     "webpack-cli": "^3.1.2"
   },
   "peerDependencies": {
+    "apollo-absinthe-upload-link": "^1.5.0",
     "apollo-boost": "^0.1.23",
     "graphql": "^14.0.2",
     "react": "^16.7.0",
@@ -41,5 +43,8 @@
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.0.0"
   }
 }
