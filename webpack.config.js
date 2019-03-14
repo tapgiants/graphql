@@ -33,7 +33,8 @@ module.exports = {
       'react-apollo': path.resolve(__dirname, './node_modules/react-apollo'),
       'apollo-boost': path.resolve(__dirname, './node_modules/apollo-boost'),
       'graphql': path.resolve(__dirname, './node_modules/graphql'),
-      'recompose': path.resolve(__dirname, './node_modules/recompose')
+      'recompose': path.resolve(__dirname, './node_modules/recompose'),
+      'apollo-absinthe-upload-link': path.resolve(__dirname, './node_modules/apollo-absinthe-upload-link')
     }
   },
   plugins: [
@@ -87,11 +88,11 @@ module.exports = {
       commonjs2: 'apollo-cache-inmemory',
       amd: 'apollo-cache-inmemory'
     },
-    'node-fetch': {
-      commonjs: 'node-fetch',
-      commonjs2: 'node-fetch',
-      amd: 'node-fetch',
-      root: 'fetch'
+    'apollo-absinthe-upload-link': {
+      commonjs: 'apollo-absinthe-upload-link',
+      commonjs2: 'apollo-absinthe-upload-link',
+      amd: 'apollo-absinthe-upload-link',
+      root: 'apollo-absinthe-upload-link'
     },
   }
 };
