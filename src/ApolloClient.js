@@ -3,10 +3,12 @@ import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import fetch from 'cross-fetch';
 
-export default (uri, headers = {}) => {
+export default (uri, headers = {}, customFetch) => {
   if (!uri) throw new Error('Uri prop not passed to the ApolloWrapper component');
 
-  let httpLinkOptions = { uri: uri, fetch };
+  let fetchFunction = customFetch || fetch;
+
+  let httpLinkOptions = { uri: uri, fetch: fetchFunction };
 
   if (Object.keys(headers).length > 0) {
     httpLinkOptions.headers = headers;

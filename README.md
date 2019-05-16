@@ -28,6 +28,11 @@ The uri prop is a string endpoint to a GraphQL server.
 
 The headers props is added to the request headers.
 
+#### `customFetch: Function`
+
+The customFetch function is used in order to make server requests. Check [apollo-link-http](https://www.apollographql.com/docs/link/links/http).
+
+
 ### ApolloWrapper example
 
 ```jsx
