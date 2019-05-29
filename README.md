@@ -7,7 +7,7 @@ The main goal of the package is to provide easy setup, cache and error formattin
 
 Install peer dependencies:
 ```bash
-yarn add graphql react-apollo apollo-boost recompose
+yarn add graphql react-apollo apollo-boost recompose apollo-absinthe-upload-link
 ```
 
 Install @tapgiants/graphql
